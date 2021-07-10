@@ -14,7 +14,11 @@ Contents:
     
     share.py: some functions and variables that are used by many scripts. 
     
+    __pychace__: ignore
+    
 HOW TO USE:
 
     You only need to run the zoomRecognition.py & symbolRecodnition.py scripts in the appropriate folders
     the generators have been run. you may use them if you want to adjust zoom and distortion factors
+    or if you want to test the code with your own images
+    
