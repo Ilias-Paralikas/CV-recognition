@@ -12,7 +12,6 @@ Contents:
     distortedGenerator creates a variety of distorted images  
     symbolRecognition locates the individual symbols in the distorted images
     
-    
-    HOW TO USE:
-        You only need to run the zoomRecognition.py & symbolRecodnition.py scripts in the appropriate folders
-        the generators have been run. you may use them if you want to adjust zoom and distortion factors
+HOW TO USE:
+    You only need to run the zoomRecognition.py & symbolRecodnition.py scripts in the appropriate folders
+    the generators have been run. you may use them if you want to adjust zoom and distortion factors
