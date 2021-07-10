@@ -15,6 +15,6 @@ for filename in os.listdir(foldername):
     zoom = int(re.sub("[^0-9]", "", filename)) / 100
     # zoom the template accordingly
     zoomed_template = cv2.resize(template, (0, 0), fx=zoom, fy=zoom)
-    shared.RecogniseTemplate(img, zoomed_template, shared.methods)
+    shared.RecogniseTemplate(img, zoomed_template)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
