@@ -1,18 +1,9 @@
-# a lot of scripts use the same variables, functions etc, and in case of variables they need to be the same
-#so they are stored here so we dont have to change them in all of the files 
 import cv2
 import os
+import re
 
-# make a file if it does not exist , or empty it if it does
-def initializeFolder(name):
-    if not os.path.isdir(name ):
-        os.system('mkdir'+name)
-    else :
-        os.system('rm -rf /home/ilias/Documents/GitHub/CV-recognition/'+name +'/*')
-#this is needed to create different test cases and to zoom the teplate
-zoomFactors = [0.20,0.40,0.60,0.80,1.20,1.40,1.60,1.80,2.00]
 
-#all the methods, we will eventually chose one
+#all the methods that are possible for cv2.matchTemplate function
 methods = [cv2.TM_CCOEFF, cv2.TM_CCOEFF_NORMED, cv2.TM_CCORR,
          cv2.TM_CCORR_NORMED,cv2.TM_SQDIFF,cv2.TM_SQDIFF_NORMED]
 
@@ -36,3 +27,14 @@ def RecogniseTemplate(img, template, methods=[cv2.TM_CCOEFF]):
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
+
+
+template = cv2.imread('template.jpg',0)
+
+for filename in os.listdir('zoomedImages'):
+    img = cv2.imread('zoomedImages/'+filename,0)
+    zoom = int(re.sub("[^0-9]","",filename)) /100
+    zoomed_template = cv2.resize(template,(0,0),fx= zoom,fy=zoom)
+    RecogniseTemplate(img,zoomed_template,methods)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
