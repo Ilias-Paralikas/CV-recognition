@@ -27,7 +27,9 @@ for key in dict:
     #to all the distorted images from the folder
     for filename in os.listdir(distortedFolder):
         img = cv2.imread(distortedFolder + '/'+filename, 0)
+        #show which symbol we are looking for 
         cv2.imshow('template',template)
+        # find the symbol in the given image
         shared.RecogniseTemplate(img, template)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
