@@ -2,9 +2,8 @@
 import cv2
 import random
 import sys
-sys.path.append("../.")
+sys.path.append("../../.")
 import shared
-
 
 original = cv2.imread('symbols.jpg', 0)
 imageHeight, imageWidth = original.shape
@@ -14,7 +13,7 @@ shared.initializeFile(foldefname)
 
 
 # chosen at random, will be adjusted later
-distorsionLevels = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6]
+distorsionLevels = [0.7,0.8,0.9] 
 # we distort the images to see how much the algortithm can take
 for distorsionLevel in distorsionLevels:
     img = original.copy()

@@ -2,7 +2,7 @@ import cv2
 import os
 import re
 import sys
-sys.path.append("../.")
+sys.path.append("../../.")
 import shared
 
 
@@ -16,5 +16,3 @@ for filename in os.listdir(foldername):
     # zoom the template accordingly
     zoomed_template = cv2.resize(template, (0, 0), fx=zoom, fy=zoom)
     shared.RecogniseTemplate(img, zoomed_template)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
