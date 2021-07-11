@@ -1,7 +1,7 @@
 import cv2
 import os
 import sys
-sys.path.append("../.")
+sys.path.append("../../.")
 import shared
 
 
