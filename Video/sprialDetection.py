@@ -5,6 +5,9 @@ from math import cos, sin
 import os
 
 originalImg = cv2.imread('rescourses/plaketa.jpg', 0)
+if originalImg.size ==0:
+    print('image is empty')
+    quit()
 imgHegith, imgWidth = originalImg.shape
 imgCentr = (imgHegith//2, imgWidth//2)
 
@@ -25,10 +28,15 @@ for filename in os.listdir(templateFolder):
         print('Template needs to fit in the frame, but has bigger dimentions')
         quit() 
 
+if not templateDict:
+    print('template dict is empty, make sure the files are correct')
+    quit()
+
+
+
+
 spiralCentrer = imgCentr
 
-
- 
 
 def cyclicalToCartesian(range, angle): return (int(range * cos(angle) + spiralCentrer[0]),
                                                int(range * sin(angle)+spiralCentrer[1]))
@@ -37,9 +45,13 @@ def cyclicalToCartesian(range, angle): return (int(range * cos(angle) + spiralCe
 range = 0
 angle = 0
 threshold = 0.95
-templateFound = False
-ANIMATION = True
-while not templateFound:
+
+ANIMATION = int(input('enter 1 to turn on ANIMATION, 0 to turn off : '))
+while ANIMATION  != 0 and ANIMATION != 1 :
+    ANIMATION = int(input('enter 1 to turn on ANIMATION, 0 to turn off : '))
+ANIMATION = bool(ANIMATION)
+
+while True:
     if ANIMATION:
         imgCopy = originalImg.copy()
     range = range+1
@@ -71,8 +83,6 @@ while not templateFound:
         _, max_val, _, max_loc = cv2.minMaxLoc(result)
         if(max_val > threshold):
             cv2.rectangle(frame,max_loc, (max_loc[0]+template.shape[1], max_loc[1]+template.shape[0]),255,5)
-            cv2.imshow(str(max_val),originalImg)
-            cv2.waitKey(0)
-            cv2.destroyAllWindows()
-            templateFound = True
+            del templateDict[key]
+            break
 

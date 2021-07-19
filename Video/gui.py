@@ -24,9 +24,12 @@ for filename in os.listdir(templateFolder):
         print('Template needs to fit in the frame, but has bigger dimentions')
         quit()
 
+
+
+print('press \'w\',\'a\',\'s\',\'d\' to move around and \'q\'  to exit \npress ENTER to continue')
+input()
 threshold = 0.95
-templateFound = False
-while not templateFound:
+while True:
 
     tempImg = img.copy()
 
@@ -51,28 +54,29 @@ while not templateFound:
 
     button = cv2.waitKey(1)
     # DOWN
-    if button == ord('s'):
+    if button == ord('s') or button == ord('S'):
         frameCenter = (frameCenter[0]+2, frameCenter[1])
     # UP
-    if button == ord('w'):
+    if button == ord('w') or button == ord('W'):
         frameCenter = (frameCenter[0]-2, frameCenter[1])
     # LEFT
-    if button == ord('a'):
+    if button == ord('a') or button == ord('A'):
         frameCenter = (frameCenter[0], frameCenter[1]-2)
     # RIGHT
-    if button == ord('d'):
+    if button == ord('d') or button == ord('D'):
         frameCenter = (frameCenter[0], frameCenter[1]+2)
-
 
     for key in templateDict:
         template = templateDict[key]
 
-        result = cv2.matchTemplate(frame,template, cv2.TM_CCORR_NORMED)
+        result = cv2.matchTemplate(frame, template, cv2.TM_CCORR_NORMED)
         _, max_val, _, max_loc = cv2.minMaxLoc(result)
         if(max_val > threshold):
-            cv2.rectangle(frame,max_loc, (max_loc[0]+template.shape[1], max_loc[1]+template.shape[1]),(255,0,0),10)
+            cv2.rectangle(
+                frame, max_loc, (max_loc[0]+template.shape[1], max_loc[1]+template.shape[1]), (255, 0, 0), 10)
+
+    if button == ord('q') or button == ord('Q'):
+        break
 
 
-    if button == ord('q'):
-        templateFound = True
 cv2.destroyAllWindows()
