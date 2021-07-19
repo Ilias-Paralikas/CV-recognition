@@ -4,7 +4,7 @@ import numpy as np
 from math import cos, sin
 import os
 
-img = cv2.imread('plaketa.jpg', 0)
+img = cv2.imread('rescourses/plaketa.jpg', 0)
 imgHegith, imgWidth = img.shape
 imgCentr = (imgHegith//2, imgWidth//2)
 
@@ -14,7 +14,7 @@ frameWidth = 200
 frameCenter = imgCentr
 
 # read the templates from a file all the templates in a Dict so we can can call  them by their name
-templateFolder = 'templates'
+templateFolder = 'rescourses/templates'
 templateDict = {}
 for filename in os.listdir(templateFolder):
     template = cv2.imread(templateFolder + '/'+filename, 0)
