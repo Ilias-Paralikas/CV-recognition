@@ -9,43 +9,26 @@ imgHegith, imgWidth = img.shape
 imgCentr = (imgHegith//2, imgWidth//2)
 
 
-
 frameHeight = 200
 frameWidth = 200
 frameCenter = imgCentr
 
-#read the templates from a file all the templates in a Dict so we can can call  them by their name
-templateFolder= 'templates'
+# read the templates from a file all the templates in a Dict so we can can call  them by their name
+templateFolder = 'templates'
 templateDict = {}
 for filename in os.listdir(templateFolder):
-    template =  cv2.imread(templateFolder + '/'+filename, 0)
+    template = cv2.imread(templateFolder + '/'+filename, 0)
     name = filename.split('.')[0]
     templateDict[name] = template
-    if(template.shape[0] > frameHeight or template.shape[1]>frameWidth ):
+    if(template.shape[0] > frameHeight or template.shape[1] > frameWidth):
         print('Template needs to fit in the frame, but has bigger dimentions')
-        quit() 
+        quit()
 
-spiralCentrer = imgCentr
-
-
- 
-
-def cyclicalToCartesian(range, angle): return (int(range * cos(angle) + spiralCentrer[0]),
-                                               int(range * sin(angle)+spiralCentrer[1]))
-
-
-range = 0
-angle = 0
 threshold = 0.95
 templateFound = False
-# ANIMATION = True
 while not templateFound:
-    # if ANIMATION:
-    #     copy = img.copy()
-    range = range+1
-    angle = angle + 0.08
-    frameCenter = cyclicalToCartesian(range, angle)
-    
+
+    tempImg = img.copy()
 
     lowerHeightBound = frameCenter[0]-frameHeight//2
     upperHeightBound = frameCenter[0]+frameHeight//2
@@ -54,15 +37,31 @@ while not templateFound:
 
     if lowerHeightBound < 0 or upperHeightBound > imgHegith or lowerWidthBound < 0 or upperWidthBound > imgWidth:
         print("frame is out of bounds")
+        print(lowerHeightBound, lowerWidthBound,
+              upperHeightBound, upperWidthBound)
+        print(0, 0, imgHegith, imgWidth)
+
         break
     frame = img[lowerHeightBound:upperHeightBound,
                 lowerWidthBound:upperWidthBound]
 
-    # if ANIMATION:
-    #     cv2.rectangle(copy,(lowerWidthBound,lowerHeightBound),(upperWidthBound,upperHeightBound),255,5)
-    #     cv2.imshow('ANIAMATION',copy)
-    #     cv2.waitKey(100)
-    #     cv2.destroyAllWindows()
+    cv2.rectangle(tempImg, (lowerWidthBound, lowerHeightBound),
+                  (upperWidthBound, upperHeightBound), 0, 0)
+    cv2.imshow('plaketa', tempImg)
+
+    button = cv2.waitKey(1)
+    # DOWN
+    if button == ord('s'):
+        frameCenter = (frameCenter[0]+2, frameCenter[1])
+    # UP
+    if button == ord('w'):
+        frameCenter = (frameCenter[0]-2, frameCenter[1])
+    # LEFT
+    if button == ord('a'):
+        frameCenter = (frameCenter[0], frameCenter[1]-2)
+    # RIGHT
+    if button == ord('d'):
+        frameCenter = (frameCenter[0], frameCenter[1]+2)
 
 
     for key in templateDict:
@@ -71,9 +70,9 @@ while not templateFound:
         result = cv2.matchTemplate(frame,template, cv2.TM_CCORR_NORMED)
         _, max_val, _, max_loc = cv2.minMaxLoc(result)
         if(max_val > threshold):
-            cv2.rectangle(frame,max_loc, (max_loc[0]+template.shape[1], max_loc[1]+template.shape[0]),255,5)
-            cv2.imshow(str(max_val),img)
-            cv2.waitKey(0)
-            cv2.destroyAllWindows()
-            templateFound = True
+            cv2.rectangle(frame,max_loc, (max_loc[0]+template.shape[1], max_loc[1]+template.shape[1]),(255,0,0),10)
 
+
+    if button == ord('q'):
+        templateFound = True
+cv2.destroyAllWindows()
