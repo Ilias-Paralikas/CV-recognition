@@ -1,28 +1,12 @@
 # CV-recognition
 
-Pictures:
+gui.py :
 
-    Static: 
+        SUMMARY: this program take as input a large image, stored as "rescourses/plaketa.jpg", variable : imgFile  
+        and a folder with a variety of templates ,"rescourses/templates", variable : templateFolder
+        additionaly a frame is cut as a subimage of the original image.
+        The user is promted the COMMANDS ,WASD to move , Z,X to zoom and Q to quit (capital or lowercase)
+        If the frame is moved to a position that it contains one of the templates, it gets detected and marked with a 
+        white rectangle. Aditionally, it is removed from the dict as it's possition is now known
 
-        scripts to locate  a template in an image
-
-    Dynamic:
-
-        scripts to locate a template in a variety of images, all of which except one will not contain it
-
-
-    matchImageToTemplate:
-
-        Given an image, find the best
-
-
-Video:
-
-    color.py :
-    
-        create a white background and fill it with a spiral motion to mimic the movement of the camera
-
-    matchValStop:
-
-        with a spiral movement as color.py, try and find the template in an image
 
