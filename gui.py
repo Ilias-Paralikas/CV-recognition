@@ -8,9 +8,6 @@
 #       frame       ->  The frame will be what the camera detects at any point in time, so we will not have to
 #                       define it's size and location
 #
-#       dummyLoc    ->  A dict that matches the templates detected with the locations
-#                       of course it has no meaning now, and will need to be updated with
-#
 #       zoomFactor  ->  zoomFactor is a result of the elecation of the board at any time, so we wont need to
 #                       to define it, BUT we will need to calculate it !!
 #
@@ -26,8 +23,8 @@
 #
 #
 # As a lot of changes will need to ba made, they will be  indicated in the code with
-# REMOVED{ '''code'''  REMOVED} for the ones that will not be needed
-# CHANGED{ '''code'''  CHANGED}
+# REMOVED { '''code'''  REMOVED } for the ones that will not be needed
+# CHANGED { '''code'''  CHANGED }
 ################################################################################################################
 
 import cv2
@@ -55,24 +52,23 @@ templateImageDict = {}
 for filename in os.listdir(templateFolder):
     # get the image
     template = cv2.imread(templateFolder + '/'+filename, 0)
-    # as well as it's name
+    # as well as it's name (ignore the .jpg part)
     name = filename.split('.')[0]
     # store it in the dict
     templateImageDict[name] = template
-    # we will remove this as we dont defince frameHeight and Width manually
-
-    # REMOVED {
+   
+    # REMOVED {  we will remove this as we dont define frameHeight and Width inside the program
     if(template.shape[0] > frameHeight or template.shape[1] > frameWidth):
         print('Template needs to fit in the frame, but has bigger dimentions')
         quit()
     # REMOVED }
 
-# the zoom (Func)
 
+# the zoom (Func)
 
 def zoom(zoomFactor, img, templateImageDict, frameWidth, frameHeight, frameCenter):
 
-    # REMOVED { as we wont need to create the img and frame
+    # REMOVED { as we wont need to resize the img and frame 
     img = cv2.resize(img, (0, 0), fx=zoomFactor, fy=zoomFactor)
     imgHeigth, imgWidth = img.shape
 
@@ -100,22 +96,26 @@ with open(templateLocationDictFile + '.pkl', 'rb') as file:
 # see if the keys of the location and template dict match, if they dont there might have been a mistake by the user
 for templateKey in templateImageDict:
     if not templateKey in templateLocationDict:
-        print('WARNING! template ',templateKey,'  is present in the templateDict, but they key is not present in locationDict')
+        print('ERROR! template ', templateKey,
+              '  is present as a template image, but it\'s location is not in locationDict (run templateLocations.py to register it)')
         quit()
 
 # REMOVED {
 print('COMMANDS\n\'w\',\'a\',\'s\',\'d\' to move around,\n\'z\',\'x\' to zoom in and out\n\'q\'  to exit \npress ENTER to continue')
 input()
-zoomFactor = 1.01
 # REMOVED }
 
-# changed???
-threshold = 0.95
+# CHANGED { we only need the zoomFactor, based on the elevation of the camera, to resize the templates accordingly
+zoomFactor = 1.01
+# CHANGED }
 
+
+# CHANGED { some trial and error should do it
+threshold = 0.95
+# CHANGED }
 
 while True:
-    # REMOVED {
-    # we wont control the camera from the terminal so we dont need the controls
+    # REMOVED { we wont control the camera from this script so we dont need the controls
     button = cv2.waitKey(1)
     step = 3
     # DOWN
@@ -131,6 +131,16 @@ while True:
     if button == ord('d') or button == ord('D'):
         frameCenter = (frameCenter[0], frameCenter[1]+step)
 
+    # exit
+    if button == ord('q') or button == ord('Q'):
+        break
+    # REMOVED }
+
+
+
+    # CHANGED {  we wont need to zoom and out, if we move the Z axis of the board
+    # Also we will need to call this function at the beggining, based on the current elevation, to adjust the
+    # initial size of the templates
     # zoom in
     if button == ord('z') or button == ord('Z'):
         img, templateImageDict, frameWidth, frameHeight, frameCenter, imgHeigth, imgWidth = zoom(
@@ -139,10 +149,11 @@ while True:
     if button == ord('x') or button == ord('X'):
         img, templateImageDict, frameWidth, frameHeight, frameCenter, imgHeigth, imgWidth = zoom(
             1/zoomFactor, img, templateImageDict, frameWidth, frameHeight, frameCenter)
-    # exit
-    if button == ord('q') or button == ord('Q'):
-        break
 
+    # CHANGED }
+
+    # REMOVED { we will not need to generate the the frame as a subimage of img, as it will be provided to us by
+    # the camera
     # we wont need to define the frame and draw on tempImg in order to display it
     tempImg = img.copy()
 
@@ -162,13 +173,22 @@ while True:
 
     # REMOVED }
 
+
+    # for every frame, see if any templates match is greater than the threshold
     for key in templateImageDict:
         template = templateImageDict[key]
-        # CHANGED ?? we need to see how well it works with and without the mask
-        templateMask = cv2.bitwise_not(templateImageDict[key])
 
+        # match the template
+        # ALL the possible methods are
+        # methods = ['cv.TM_CCOEFF', 'cv.TM_CCOEFF_NORMED', 'cv.TM_CCORR',
+        #    'cv.TM_CCORR_NORMED', 'cv.TM_SQDIFF', 'cv.TM_SQDIFF_NORMED']
+        # we chose TM_CCORR_NORMED, but others can be tried
+
+        # WARNING! if [cv.TM_SQDIFF, cv.TM_SQDIFF_NORMED] are used, use min_loc, the third variable, which is
+        # currently blank instead of max_loc
         result = cv2.matchTemplate(
-            frame, template, cv2.TM_CCORR_NORMED, mask=templateMask)
+            frame, template, method=cv2.TM_CCORR_NORMED)
+        # the two variables that are blank are min_val and min_loc
         _, max_val, _, max_loc = cv2.minMaxLoc(result)
         if(max_val > threshold):
             # CHANGED { we wont need to draw a rectangle around the template

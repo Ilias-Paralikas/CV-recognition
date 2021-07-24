@@ -2,10 +2,10 @@ import pickle
 
 # we want the instructions to be very clear, that's why we  insist in getting either 1 or 0
 COMMAND = input(
-    'type: \n1 if you want to replace excisting dict and \n0 if you want to keep the values(of the names that dont overlap)\n')
+    'type: \n1 if you want to replace excisting dict and \n0 if you want to keep the values(of the names that dont overlap)\nTYPE: ')
 while COMMAND != '0' and COMMAND != '1':
     COMMAND = input(
-        'type: \n1 if you want to replace excisting dict and \n0 if you want to keep the values(of the names that dont overlap)\n')
+        'type: \n1 if you want to replace excisting dict and \n0 if you want to keep the values(of the names that dont overlap)\nTYPE: ')
 
 # the file that we want to store the dict and it's path
 templateLocationDictFile = 'rescourses/locationDict.pkl'
@@ -48,7 +48,7 @@ if templateLocationDict:
 else:
     print('Given dict is empty')
     deleteDict = input(
-        'are you sure you want to delete it?\n type :\n1 for yes \n,0 for no\n')
+        'Are you sure you want to delete it?\n type :\n1 for yes')
     if deleteDict == '1':
         with open(templateLocationDictFile, 'wb') as file:
             pickle.dump(templateLocationDict, file, pickle.HIGHEST_PROTOCOL)
