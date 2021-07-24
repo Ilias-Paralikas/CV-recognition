@@ -23,7 +23,7 @@
 #
 #
 # As a lot of changes will need to ba made, they will be  indicated in the code with
-# REMOVED { '''code'''  REMOVED } for the ones that will not be needed
+# REMOVED { '''code'''  REMOVED } 
 # CHANGED { '''code'''  CHANGED }
 ################################################################################################################
 
